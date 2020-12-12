@@ -6,7 +6,7 @@
 #    By: jdaufin <jdaufin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/08 16:22:01 by jdaufin           #+#    #+#              #
-#    Updated: 2020/12/12 16:04:13 by jdaufin          ###   ########lyon.fr    #
+#    Updated: 2020/12/12 19:06:09 by jdaufin          ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ SRC_NAME = ft_atoi.c ft_memdel.c ft_strcat.c ft_strncat.c ft_bzero.c\
 		   ft_putwstr_fd.c ft_wcharlen.c ft_wcstrlen.c ft_wcrtomb.c\
 		   ft_wcstombs.c ft_strsub_free.c ft_atoimax.c ft_strsplit_blanks.c\
 		   ft_strjoin_free.c ft_itoa_base.c ft_uitoa_base.c ft_stabdel.c\
-		   ft_lstlen.c ft_linkdel.c ft_lstpop.c
+		   ft_lstlen.c ft_linkdel.c ft_lstpop.c ft_strdup_free.c
 SRC = $(addprefix $(SRCDIR), $(SRC_NAME))
 OBJDIR = builts/
 OBJ = $(addprefix $(OBJDIR), $(SRC_NAME:.c=.o))
@@ -50,7 +50,11 @@ $(NAME) : $(OBJ)
 	@echo "$(NAME) ready"
 
 start :
-	@echo "Compiling sources…"
+	@([ ! -d $(OBJDIR) ] \
+		|| [ $(shell ls -A $(SRCDIR) | wc -l) \
+		-ne $(shell [ -d $(OBJDIR) ] && ls -A $(OBJDIR) | wc -l || echo 0 ) ]) \
+		&& echo "Starting make $(NAME)" \
+		|| echo "$(NAME): no compilation needed"
 
 $(OBJDIR)%.o : $(SRCDIR)%.c $(HDR)
 	@[ -d $(OBJDIR) ] || mkdir $(OBJDIR)
@@ -59,7 +63,7 @@ $(OBJDIR)%.o : $(SRCDIR)%.c $(HDR)
 
 clean :
 	@rm -rf $(OBJDIR)
-	@echo "Object files removed"
+	@echo "$(NAME) object files removed"
 
 fclean : clean
 	@rm -f $(NAME)
